@@ -1,5 +1,5 @@
 #[0, 1, 2, 3, 3, 4, 4, 4, 5, 8, 9]
-array = [3, 8, 1, 3, 4, 4, 4, 9, 0, 2, 5]
+array = [3, 8, 1, 3, 4, 4, 4, 9, 0, 2, 5, 41]
 
 #[0, 1, 2, 3, 3, 3, 5, 5, 5, 6, 9, 9, 9]
 array_1 = [5, 3, 9, 3, 9, 0, 5, 3, 1, 9, 2, 5, 6]
@@ -53,12 +53,27 @@ def merge(array): # Recursion
     return results
 
 
+def counts(array):
+    length = len(array)
+    max_num = max(array) + 1
+    counting = [0] * max_num
+    for i in range(length):
+        counting[array[i]] += 1
+    
+    counter = 0
+    for num in range(max_num):
+        for i in range(counting[num]):
+            array[counter] = num
+            counter += 1
+    return array
+
+
 def main():
     print(shift(array))
     print(merge(array))
+    print(counts(array))
 
 
 if __name__ == '__main__':
     main()
-
 

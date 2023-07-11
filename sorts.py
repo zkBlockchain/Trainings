@@ -1,14 +1,4 @@
-#[0, 1, 2, 3, 3, 4, 4, 4, 5, 8, 9]
-array = [3, 8, 1, 3, 4, 4, 4, 9, 0, 2, 5, 41]
-
-#[0, 1, 2, 3, 3, 3, 5, 5, 5, 6, 9, 9, 9]
-array_1 = [5, 3, 9, 3, 9, 0, 5, 3, 1, 9, 2, 5, 6]
-
-#[0, 0, 0, 0, 1, 4, 4, 5, 5, 6, 6, 9]
-array_2 = [4, 4, 5, 5, 6, 6, 9, 0, 0, 0, 0, 1]
-    
-#[1, 1, 2, 2, 3, 3, 4, 4]
-array_3 = [4, 3, 2, 1, 4, 3, 2, 1]
+import random
 
 
 def shift(array):
@@ -20,7 +10,7 @@ def shift(array):
     return array
 
 
-def merge(array): # Recursion
+def merge(array):
     array_len = len(array)
     if not array_len or array_len == 1:
         return array
@@ -53,7 +43,7 @@ def merge(array): # Recursion
     return results
 
 
-def counts(array):
+def count(array):
     length = len(array)
     max_num = max(array) + 1
     counting = [0] * max_num
@@ -68,12 +58,67 @@ def counts(array):
     return array
 
 
+def swap(array, left, right):
+    pivots = array[random.randrange(left, right)]
+    s, m, n = left, left, right - 1
+    while s <= n:
+        if array[s] < pivots:
+            array[s], array[m] = array[m], array[s]
+            m += 1
+            s += 1
+        elif array[s] > pivots:
+            array[s], array[n] = array[n], array[s]
+            n -= 1
+        else:
+            s += 1
+    return m, n
+
+
+def quick(array, left, right):
+    if right - left <= 1:
+        return array
+    
+    m, n = swap(array, left, right)
+
+    quick(array, left, m)
+    quick(array, n + 1, right)
+
+    return array
+
+
+def get_kth(array, left, right, k):
+    if k >= right:
+        return -1
+    elif right - left <= 1:
+        return array[left]
+    
+    m, n = swap(array, left, right)
+
+    if k < m:
+        return get_kth(array, left, m, k)
+    elif k >= n + 1:
+        return get_kth(array, n + 1, right, k)
+    else:
+        return array[k]
+
+
 def main():
-    print(shift(array))
-    print(merge(array))
-    print(counts(array))
+    array = [random.randrange(0, 15) for x in range(0, 15)]
+
+    index = random.randrange(0, len(array))
+    kth_value = get_kth(array.copy(), 0, len(array), index)
+
+    print('Array:\t', array)
+    print('Shift:\t', shift(array.copy()))
+    print('Merge:\t', merge(array.copy()))
+    print('Count:\t', count(array.copy()))
+    print('Quick:\t', quick(array, 0, len(array)))
+
+    print('Return KTH:', kth_value)
+    print('Checks KTH:', array[index])
 
 
 if __name__ == '__main__':
     main()
+
 

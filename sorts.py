@@ -2,19 +2,19 @@ import random
 
 
 def shift(array):
-    for i in range(len(array)):
-        j = i
-        while j > 0 and array[j] < array[j-1]:
-            array[j], array[j-1] = array[j-1], array[j]
-            j -= 1
+    for n in range(len(array)):
+        m = n
+        while m > 0 and array[m] < array[m - 1]:
+            array[m], array[m - 1] = array[m - 1], array[m]
+            m -= 1
     return array
 
 
 def merge(array):
     array_len = len(array)
-    if not array_len or array_len == 1:
+    if array_len <= 1:
         return array
-    if array_len == 2:
+    elif array_len == 2:
         if array[0] > array[1]:
             return [array[1], array[0]]
         else:
@@ -24,37 +24,34 @@ def merge(array):
     right = merge(array[array_len // 2:])
     left_len, right_len = len(left), len(right)
     
-    n, m = 0, 0
-    results = []
-    while n < left_len or m < right_len:
+    n = m = 0
+    array.clear()
+    while n < left_len and m < right_len:
         if left[n] < right[m]:
-            results.append(left[n])
+            array.append(left[n])
             n += 1
         else:
-            results.append(right[m])
+            array.append(right[m])
             m += 1
 
-        if n == left_len:
-            results.extend(right[m:])
-            return results
-        elif m == right_len:
-            results.extend(left[n:])
-            return results
-    return results
+    if n >= left_len:
+        array.extend(right[m:])
+    elif m >= right_len:
+        array.extend(left[n:])
+
+    return array
 
 
 def count(array):
-    length = len(array)
-    max_num = max(array) + 1
-    counting = [0] * max_num
-    for i in range(length):
-        counting[array[i]] += 1
-    
-    counter = 0
-    for num in range(max_num):
-        for i in range(counting[num]):
-            array[counter] = num
-            counter += 1
+    counts = [0] * (max(array) + 1)
+
+    for item in array:
+        counts[item] += 1
+
+    array.clear()
+    for n in range(len(counts)):
+        array += [n] * counts[n]
+
     return array
 
 
@@ -87,13 +84,13 @@ def quick(array, left, right):
 
 
 def get_kth(array, left, right, k):
-    if k >= right:
+    if k >= right or k < left:
         return -1
     elif right - left <= 1:
         return array[left]
     
     m, n = swap(array, left, right)
-
+    
     if k < m:
         return get_kth(array, left, m, k)
     elif k >= n + 1:
